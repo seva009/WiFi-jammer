@@ -109,7 +109,7 @@ void initHP() {
   hp = new SPIClass(HSPI);
   hp->begin();
   if (radio.begin(hp)) {
-    Serial.println("HP Stc:\Users\honor\Documents\Arduino\sketch_jun7b\sketch_jun7b.inoarted !!!");
+    Serial.println("HP Started !!!");
     radio.setAutoAck(false);
     radio.stopListening();
     radio.setRetries(0, 0);
