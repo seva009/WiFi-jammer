@@ -111,7 +111,7 @@ void initVSPI() {
     radio1.setDataRate(RF24_2MBPS);
     radio1.setCRCLength(RF24_CRC_DISABLED);
     radio1.setAutoAck(false);
-    radio1.startConstCarrier(RF24_PA_MAX, chHSPI);
+    radio1.startConstCarrier(RF24_PA_MAX, 5);
     radio1.printPrettyDetails();
   } else {
     Serial.println("VSPI couldn't start !!!");
@@ -130,7 +130,7 @@ void initHSPI() {
     radio.setDataRate(RF24_2MBPS);
     radio.setCRCLength(RF24_CRC_DISABLED);
     radio.setAutoAck(false);
-    radio.startConstCarrier(RF24_PA_MAX, chHSPI);
+    radio.startConstCarrier(RF24_PA_MAX, 8);
     radio.printPrettyDetails();
   } else {
     Serial.println("HSPI couldn't start !!!");
