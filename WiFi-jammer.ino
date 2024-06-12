@@ -4,7 +4,7 @@
 #include "esp_wifi.h"
 
 void (*soft_reset)() = 0; //dirty hack :)
-void (*jamming)();        //pointer to jam func (depending on the connected nRF24L01(+))
+void (*work)();           //pointer to jam func (depending on the connected nRF24L01(+))
 
 bool useHSPI = false;
 bool useVSPI = false;
@@ -93,10 +93,10 @@ void setup() {
   esp_wifi_deinit();
   initHSPI();
   initVSPI();
-  if      (!(useHSPI || useVSPI)) jamming = &init_error;
-  else if (useHSPI && useVSPI)    jamming = &wifi_bl_Jamming;
-  else if (useVSPI)               jamming = &wifi_bl_Jamming_V;
-  else if (useHSPI)               jamming = &wifi_bl_Jamming_H;
+  if      (!(useHSPI || useVSPI)) work = &init_error;
+  else if (useHSPI && useVSPI)    work = &wifi_bl_Jamming;
+  else if (useVSPI)               work = &wifi_bl_Jamming_V;
+  else if (useHSPI)               work = &wifi_bl_Jamming_H;
 }
 
 void initVSPI() {
@@ -111,7 +111,7 @@ void initVSPI() {
     radio1.setDataRate(RF24_2MBPS);
     radio1.setCRCLength(RF24_CRC_DISABLED);
     radio1.setAutoAck(false);
-    radio1.startConstCarrier(RF24_PA_MAX, 5);
+    radio1.startConstCarrier(RF24_PA_MAX, 8);
     radio1.printPrettyDetails();
   } else {
     Serial.println("VSPI couldn't start !!!");
@@ -130,21 +130,21 @@ void initHSPI() {
     radio.setDataRate(RF24_2MBPS);
     radio.setCRCLength(RF24_CRC_DISABLED);
     radio.setAutoAck(false);
-    radio.startConstCarrier(RF24_PA_MAX, 8);
+    radio.startConstCarrier(RF24_PA_MAX, 5);
     radio.printPrettyDetails();
   } else {
     Serial.println("HSPI couldn't start !!!");
   }
 }
 
-uint16_t timer = 0;
-
+__attribute__((optimize("unroll-loops")))
 void loop() {
-  if (timer >= 16000) [[unlikely]] {
-    Serial.println("Resetting...");
-    soft_reset();
-  }
-  timer++;
-  jamming(); //or wifiJamming()
+  // static uint8_t timer = 0;
+  // if (timer >= 255) [[unlikely]] {
+  //   Serial.println("Resetting...");
+  //   ESP.restart();
+  // }
+  // timer++;
+  for (uint8_t i = 0; i <= (uint8_t)-1>>1;i++) work(); //or wifiJamming()
   delay(1);
 }
