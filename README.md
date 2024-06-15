@@ -1,5 +1,6 @@
 # WiFi-jammer
 А это уже не deauther :)
+
 Project Dalet - Скоро у себя переделаю на nRF24L01+PA+LNA
 
 Распиновка как подключать nRF24L01(+) к esp32
